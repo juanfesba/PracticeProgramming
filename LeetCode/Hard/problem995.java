@@ -1,36 +1,23 @@
-import java.util.LinkedList;
-import java.util.Iterator;
-
-class Solution {
-    
-    /*public class struct{
-        public int i;
-        public int flag;
-        
-        struct(int ni,int nflag){
-            flag=nflag;
-            i=ni;
-        }
-    }*/
-    
-    public int minKBitFlips(int[] A, int K) {
+public static int minKBitFlips(int[] A, int K) {
         LinkedList<Integer> range=new LinkedList<Integer>();
         
-        //range.add(new struct(0,1));
         range.add(A.length-1);
-        ListIterator<Integer> itr=range.listIterator();
         
-        int ele=itr.next();
-        ele=itr.next();
-        
-        int ans=-1;
+        int ans=0;
         int i=0;
+        int j=0;
         int flag=0;
-        
         int ref;
+        int ele=range.get(j);
+        int ref2=0;
         
-        while(i<A.length){ //recordar que realmente es hasta A.lenght-K
+        while(i<A.length){
             if(i>A.length-K){
+                if(i>ele){
+                    j+=1;
+                    ele=range.get(j);
+                    flag=1-flag;
+                }
                 if (A[i]-flag==0){
                     ans=-1;
                     break;
@@ -38,8 +25,10 @@ class Solution {
             }
             else{
                 if(i>ele){
-                    ele=itr.next();
+                    j+=1;
+                    ele=range.get(j);
                     flag=1-flag;
+                    ref2-=1;
                 }
                 if (A[i]-flag==0){
                     ans+=1;
@@ -47,12 +36,14 @@ class Solution {
                         flag=1-flag;
                         ref=i+K-1;
                         if(ref<ele){
-                            itr.add(ele);
+                            range.add(j+1,ele);
                             ele=ref;
+                            ref2+=1;
                         }
                         else{
                             if(ref>ele){
-                                itr.add(ref);
+                                range.add(j+ref2,ref);
+                                ref2+=1;
                             }
                         }
                     }
@@ -61,10 +52,5 @@ class Solution {
             i++;
         }
         
-        if (ans!=-1){
-            ans+=1;
-        }
-        
         return ans;
     }
-}
